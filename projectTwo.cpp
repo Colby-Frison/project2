@@ -56,8 +56,6 @@ public:
         return id;
     }
 
-
-
     double getOutputValue() const;
 
     // Perform the computation based on the chip type
