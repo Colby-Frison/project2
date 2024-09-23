@@ -9,7 +9,7 @@ private:
     string id;         // Unique identifier for the chip
     Chip* input1;      // Pointer to the first input chip
     Chip* input2;      // Pointer to the second input chip (can be NULL)
-    Chip* output;  // Output connection (chip this one feeds into)
+    Chip* output;      // Output connection (chip this one feeds into)
     double inputValue; // For input chips
     double outputValue; // Result after computation
     bool isComputed;   // To avoid redundant computations
@@ -55,6 +55,7 @@ public:
     string getId() const {
         return id;
     }
+
 
     double getOutputValue() const;
 
@@ -173,7 +174,7 @@ Chip* findChipById(Chip* chips[], int numChips, const string& chipId) {
         }
     }
     return nullptr; // Return nullptr if no chip with the given ID is found
-}
+}  
 
 int main() {
     int numChips, numCommands;
@@ -209,6 +210,7 @@ int main() {
             cin >> sourceId >> destId;
             Chip* sourceChip = findChipById(allChips, numChips, sourceId);
             Chip* destChip = findChipById(allChips, numChips, destId);
+            sourceChip->setOutput(destChip);
 
             if (sourceChip == nullptr) {
                 cout << "Error: Could not find the source chip with ID: " << sourceId << endl;
@@ -235,6 +237,7 @@ int main() {
         } else if (commandType == 'O') {
             cin >> destId;
             Chip* destChip = findChipById(allChips, numChips, destId);
+            //destChip->setInput1(nullptr);
 
             if (destChip == nullptr) {
                 cout << "Error: Could not find the destination chip with ID: " << destId << endl;
