@@ -3,6 +3,29 @@
 
 using namespace std;
 
+/*
+ -- TO-DO -- 
+
+ For some reason one test 3 the output chip is put at the begining instead of the end
+ this is a problem as my code simply prints out in order they were given
+ So I need to adjust that to pass that last test.
+
+ The first 2 test pass though :)
+
+ Other than actual code stuff I still need to write part 2 and 3
+
+ for 2 I'll need to write some gpt enties to make it less wrote it for me and more helped me write it
+
+ for part 3 use the debugg lines as well as error debug messages still in here to explain debugging process
+ Also explain the egmentation error with getId then fixing it with simply remmbering to set the input/output chips :|
+
+ That was really stupid
+
+ Also if time persists write comments trhoughout the code explaing what everything does
+ along with a blurb at the begining on what the program does and how it works
+
+*/
+
 class Chip {
 private:
     char chipType;     // Type of the chip (A: Addition, S: Subtraction, etc.)
@@ -251,9 +274,27 @@ int main() {
     }
 
     // Display connections
-    cout << "***** Showing the connections that were established *****" << endl;
+    cout << "***** Showing the connections that were established" << endl;
+    
+    // First, display input chips
     for (int i = 0; i < numChips; ++i) {
-        allChips[i]->display();
+        if (allChips[i]->getType() == 'I') {
+            allChips[i]->display();
+        }
+    }
+
+    // Second, display logic chips (A, S, M, N, D)
+    for (int i = 0; i < numChips; ++i) {
+        if (allChips[i]->getType() != 'I' && allChips[i]->getType() != 'O') {
+            allChips[i]->display();
+        }
+    }
+
+    // Finally, display output chips
+    for (int i = 0; i < numChips; ++i) {
+        if (allChips[i]->getType() == 'O') {
+            allChips[i]->display();
+        }
     }
 
     // Cleanup allocated memory
