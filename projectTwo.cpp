@@ -3,192 +3,219 @@
 
 using namespace std;
 
-/*
- -- TO-DO -- 
+/****************************************************************************************************
+ * * * * * * * * * * * * * * Colby Frison ~ Data structures CS-2413 * * * * * * * * * * * * * * * * * 
+ * 
+ * This program is a little all over the place, but it still works and is relativley organized so who
+ * cares. The program takes in an input that sates the amount of chips, then the actaul chips, then 
+ * the number of operations, followed by what operations it is doing. These chips consist of an input 
+ * and output along with the actually math ones so: addition, subtraction, mulitplication, division, 
+ * and lastly negation. All of the math chips take in two inputs besides the negation one, which ony 
+ * takes one input. Also the output chips is a little weird as it doesnt actually output anyhting,
+ * it just kind of displays what it recieves as its one input. 
+ * 
+ * I'll explain what the main methods due throughout the program as well. 
+****************************************************************************************************/
 
- For some reason one test 3 the output chip is put at the begining instead of the end
- this is a problem as my code simply prints out in order they were given
- So I need to adjust that to pass that last test.
-
- The first 2 test pass though :)
-
- Other than actual code stuff I still need to write part 2 and 3
-
- for 2 I'll need to write some gpt enties to make it less wrote it for me and more helped me write it
-
- for part 3 use the debugg lines as well as error debug messages still in here to explain debugging process
- Also explain the egmentation error with getId then fixing it with simply remmbering to set the input/output chips :|
-
- That was really stupid
-
- Also if time persists write comments trhoughout the code explaing what everything does
- along with a blurb at the begining on what the program does and how it works
-
-*/
-
+//chip class
 class Chip {
 private:
-    char chipType;     // Type of the chip (A: Addition, S: Subtraction, etc.)
-    string id;         // Unique identifier for the chip
-    Chip* input1;      // Pointer to the first input chip
-    Chip* input2;      // Pointer to the second input chip (can be NULL)
-    Chip* output;      // Output connection (chip this one feeds into)
-    double inputValue; // For input chips
-    double outputValue; // Result after computation
-    bool isComputed;   // To avoid redundant computations
+
+    //chip identifiers
+    char chipType;     
+    string id;  
+        
+    //chips
+    Chip* input1;      
+    Chip* input2;      
+    Chip* output;     
+
+    //important vars for computation 
+    double inputValue; 
+    double outputValue;
+    bool isComputed;   
 
 public:
-    // Constructor
-    Chip(char type, const string& id) : chipType(type), id(id), input1(nullptr), input2(nullptr), inputValue(0), outputValue(0), isComputed(false) {}
 
-    // Set the first input chip
-    void setInput1(Chip* inputChip) {
-        input1 = inputChip;
-    }
+    //constructor
+    Chip(char type, const string& id);
 
-    // Set the second input chip (can be NULL)
-    void setInput2(Chip* inputChip) {
-        input2 = inputChip;
-    }
+    //setters
+    void setInput1(Chip* inputChip);
+    void setInput2(Chip* inputChip);//can be null
+    void setOutput(Chip* inputChip);
+    void setInputValue(double value);
 
-    void setOutput(Chip* chip) { output = chip; }
+    //chip getters
+    Chip* getInput1() const;
+    Chip* getInput2() const;
+    Chip* getOutput() const;
 
-    // Set the input value for input chips
-    void setInputValue(double value) {
-        inputValue = value;
-        isComputed = false; // Reset computed status when input value changes
-    }
-
-    // Getters for input1 and input2
-    Chip* getInput1() const {
-        return input1;
-    }
-
-    Chip* getInput2() const {
-        return input2;
-    }
-
-    Chip* getOutput() const { return output; }
-
-    char getType() const{
-        return chipType;
-    }
-
-    // Getter for id
-    string getId() const {
-        return id;
-    }
-
-
+    //other getter
+    char getType() const;
+    string getId() const;
     double getOutputValue() const;
 
-    // Perform the computation based on the chip type
-    //some comments in here are for debugging and others are actuall comments its lowkey a mess 
-    //  I apologize
-    void compute() {
-        if (isComputed) return;  // Prevent re-computation
+    //important methods
+    void compute();
+    void display() const;
 
-        switch (chipType) {
-            case 'A': // Addition
-                input1->compute();
-                input2->compute();
-                outputValue = input1->getOutputValue() + input2->getOutputValue();
-                //cout << id << " computed: " << outputValue << endl;
-                break;
-            case 'S': // Subtraction
-                input1->compute();
-                input2->compute();
-                outputValue = input1->getOutputValue() - input2->getOutputValue();
-                //cout << id << " computed: " << outputValue << endl;
-                break;
-            case 'M': // Multiplication
-                input1->compute();
-                input2->compute();
-                outputValue = input1->getOutputValue() * input2->getOutputValue();
-                //cout << id << " computed: " << outputValue << endl;
-                break;
-            case 'D': // Division
-                input1->compute();
-                input2->compute();
-                if (input2->getOutputValue() != 0) {
-                    outputValue = input1->getOutputValue() / input2->getOutputValue();
-                } else {
-                    cout << "Error: Division by zero!" << endl;
-                    outputValue = 0;
-                }
-                //cout << id << " computed: " << outputValue << endl;
-                break;
-            case 'N': // Negation
-                input1->compute();
-                outputValue = -input1->getOutputValue();
-                //cout << id << " computed: " << outputValue << endl;
-                break;
-            case 'I': // Input chip
-                outputValue = inputValue;  // Input chip simply holds its input value
-                //cout << id << " input value: " << outputValue << endl;
-                break;
-            case 'O': // Output chip
-                if (input1 != nullptr) {
-                    input1->compute();  // Ensure input chip is computed before outputting
-                    outputValue = input1->getOutputValue(); // Just pass the value for display
-                }
-                //cout << "I am output chip " << id << ", and the value I received is " << outputValue << endl;
-                break;
-            default:
-                cout << "Unknown chip type!" << endl;
-        }
-        isComputed = true;  // Mark as computed to avoid re-computation
-    }
-
-    // Display connections
-    // Display connections
-    // Display method to show chip connections
-    void display() const {
-        // Handle input chips (type 'I')
-        if (chipType == 'I') {
-            cout << id << ", Output = ";
-            if (output) {
-                cout << output->getId() << endl;  // Safely access the output chip ID
-            } else {
-                cout << "None" << endl;
-            }
-        }
-        // Handle output chips (type 'O')
-        else if (chipType == 'O') {
-            cout << id << ", Input 1 = ";
-            if (input1) {
-                cout << input1->getId() << endl;  // Safely access the input chip ID
-            } else {
-                cout << "None" << endl;
-            }
-        }
-        // Handle logic chips (e.g., AND, OR, NOT)
-        else {
-            cout << id << ", Input 1 = ";
-            if (input1) {
-                cout << input1->getId() << ", ";
-            } else {
-                cout << "None, ";
-            }
-            cout << "Input 2 = ";
-            if (input2) {
-                cout << input2->getId() << ", ";
-            } else {
-                cout << "None, ";
-            }
-            cout << "Output = ";
-            if (output) {
-                cout << output->getId() << endl;
-            } else {
-                cout << "None" << endl;
-            }
-        }
-    }
 };
+
+//constructor assign type and id, assign else to default
+Chip::Chip(char type, const string& id) : chipType(type), id(id), input1(nullptr), input2(nullptr), inputValue(0), outputValue(0), isComputed(false) {}
+
+//setters
+void Chip::setInput1(Chip* inputChip) {
+    input1 = inputChip;
+}
+void Chip::setInput2(Chip* inputChip) {
+    input2 = inputChip;
+}
+void Chip::setOutput(Chip* chip) { 
+    output = chip; 
+}
+void Chip::setInputValue(double value) {
+    inputValue = value;
+    isComputed = false; // Reset computed status when input value changes
+}
+
+//chip getters
+Chip* Chip::getInput1() const {
+    return input1;
+}
+Chip* Chip::getInput2() const {
+    return input2;
+}
+Chip* Chip::getOutput() const { 
+    return output; 
+}
+
+//other getters
+char Chip::getType() const{
+    return chipType;
+}
+string Chip::getId() const {
+    return id;
+}
+
+
+/***************************
+ * The compute class is one of the important methods in the program, 
+ * it has the responsiblity of actually doing the math of the chips.
+ * This is done through a simple switch case that changes what 
+ * operation is done based on the chip type.
+ * 
+ * the comments throughout are a little all over the place. Some of 
+ * the comments are for description, others were for debugging I never
+ * deleted, I still kept those just to show how debuging worked through
+ * my process.
+****************************/
+void Chip::compute() {
+    if (isComputed) return;  // Prevent re-computation
+
+    switch (chipType) {
+        case 'A': // Addition
+            input1->compute();
+            input2->compute();
+            outputValue = input1->getOutputValue() + input2->getOutputValue();
+            //cout << id << " computed: " << outputValue << endl;
+            break;
+        case 'S': // Subtraction
+            input1->compute();
+            input2->compute();
+            outputValue = input1->getOutputValue() - input2->getOutputValue();
+            //cout << id << " computed: " << outputValue << endl;
+            break;
+        case 'M': // Multiplication
+            input1->compute();
+            input2->compute();
+            outputValue = input1->getOutputValue() * input2->getOutputValue();
+            //cout << id << " computed: " << outputValue << endl;
+            break;
+        case 'D': // Division
+            input1->compute();
+            input2->compute();
+            if (input2->getOutputValue() != 0) {
+                outputValue = input1->getOutputValue() / input2->getOutputValue();
+            } else {
+                cout << "Error: Division by zero!" << endl;
+                outputValue = 0;
+            }
+            //cout << id << " computed: " << outputValue << endl;
+            break;
+        case 'N': // Negation
+            input1->compute();
+            outputValue = -input1->getOutputValue();
+            //cout << id << " computed: " << outputValue << endl;
+            break;
+         case 'I': // Input chip
+            outputValue = inputValue;  // Input chip simply holds its input value
+            //cout << id << " input value: " << outputValue << endl;
+            break;
+        case 'O': // Output chip
+           if (input1 != nullptr) {
+                input1->compute();  // Ensure input chip is computed before outputting
+                outputValue = input1->getOutputValue(); // Just pass the value for display
+            }
+            //cout << "I am output chip " << id << ", and the value I received is " << outputValue << endl;
+            break;
+        default:
+            cout << "Unknown chip type!" << endl;
+    }
+    isComputed = true;  // Mark as computed to avoid re-computation
+}
+
+/***************************
+ * 
+****************************/
+void Chip::display() const {
+        // Handle input chips (type 'I')
+    if (chipType == 'I') {
+        cout << id << ", Output = ";
+        if (output) {
+            cout << output->getId() << endl;  // Safely access the output chip ID
+        } else {
+            cout << "None" << endl;
+        }
+    }
+        // Handle output chips (type 'O')
+    else if (chipType == 'O') {
+        cout << id << ", Input 1 = ";
+        if (input1) {
+            cout << input1->getId() << endl;  // Safely access the input chip ID
+        } else {
+            cout << "None" << endl;
+        }
+    }
+        // Handle logic chips (e.g., AND, OR, NOT)
+    else {
+        cout << id << ", Input 1 = ";
+        if (input1) {
+            cout << input1->getId() << ", ";
+        } else {
+            cout << "None, ";
+        }
+        cout << "Input 2 = ";
+        if (input2) {
+            cout << input2->getId() << ", ";
+        } else {
+            cout << "None, ";
+        }
+        cout << "Output = ";
+        if (output) {
+            cout << output->getId() << endl;
+        } else {
+            cout << "None" << endl;
+        }
+    }
+}
+
 
 double Chip::getOutputValue() const{
     return outputValue;
 }
+
 
 Chip* findChipById(Chip* chips[], int numChips, const string& chipId) {
     for (int i = 0; i < numChips; ++i) {
