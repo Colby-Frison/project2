@@ -3,8 +3,12 @@
 
 using namespace std;
 
-/****************************************************************************************************
+/*****************************************************************************************************
  * * * * * * * * * * * * * * Colby Frison ~ Data structures CS-2413 * * * * * * * * * * * * * * * * * 
+ * 
+ * * * * * * * * * * * * * * * * * Part 2 starts at line 357 * * * * * * * * * * * * * * * * * * * * *
+ * 
+ * * * * * * * * * * * * * * * * * Part 3 starts at line 651 * * * * * * * * * * * * * * * * * * * * *
  * 
  * This program is a little all over the place, but it still works and is relativley organized so who
  * cares. The program takes in an input that sates the amount of chips, then the actaul chips, then 
@@ -15,7 +19,8 @@ using namespace std;
  * it just kind of displays what it recieves as its one input. 
  * 
  * I'll explain what the main methods due throughout the program as well. 
-****************************************************************************************************/
+ * 
+*****************************************************************************************************/
 
 //chip class
 class Chip {
@@ -645,6 +650,46 @@ and the solution it gave was just 3 if statements one for I one for O and one fo
  * 
  * * * * * * * * * * * * * * * * * * * * * * Part 3 * * * * * * * * * * * * * * * * * * * * * * * 
  * 
+ * The debugging and testing process of the development of this program was pretty simple. The most basic 
+ * forms of test was just the inputs provided by the porject description page, I was able to use these tests 
+ * to make sure my program was running as intened. To make sure the outputs were the exact same I used a
+ * program that checked to make sure they were equal. beyond just test I had various debug lines throughout 
+ * the code that helped ensure the write things were happening. For instance in the compute class I had print
+ * statements that displayed what was being computed at each step, along with that in the main method I had 
+ * various different debug lines, one of them displayed what chips were created, the other dispaleyed when 
+ * an input was recieved.
  * 
+ * One noteable issue I encountered was with input3, in this input the output chip was listed first instead 
+ * of last, this caused an issue in my ouput where the output chip was listed as the first operation, which 
+ * is obviuosly wrong. To fix this issue I used a set of if statements in the portion of the main method were 
+ * I displaeyd the outputs. These if statements simply displayed inputs first then operational chips then the 
+ * output chip. This ensured the proper output order.
+ * 
+ * Another issue I had that I felt very stupid about was when I was first making the display method. For some 
+ * reason I couldn't figure out there was a seggmentation error when trying to call the getId method to print 
+ * the id. I eventually figured out I forgot to set the output chip when declaring chips in the main method. It
+ * was an easy fix but it took an embarassingly long time to figure out.
+ * 
+ * In terms of other tests I didnt really have any, I just made sure it worked with the three provided. But its
+ * not like I only made sure it worked with these three. For instance, I had multipule catches in place to ensure 
+ * nothing blew up in the program. For instance everytime something may be null i always check to make sure it 
+ * isnt before calling for it. Or in the division section, you obviously cant divide by 0, so i make sure the 
+ * input val != 0. I couldnt think of any other fail cases so I think thats all i implemented, I gaurentee 
+ * I left something out, but thats all i can remember. 
+ * 
+ * Lastly for optimization I didnt really put too much thought into it until now. For the compute method I have
+ * a series of switches cases as there are 7 differnet possibilities and im pretty sure swithc is faster than 7 
+ * if statements. For the other methods that implement a lot of swithc cases I don't think it was super applicable
+ * as it is usually a far less intense process. There are probably numerous other optimizations I can make throughout 
+ * the program, but due to the realtive simplicity of the task it isnt worth the time to scrutinize it. I did make 
+ * sure to properly delete all the chips and the arr at the end of the program if were counting that as opitmiaztion.
+ * 
+ * So in short, I used the provided inputs and matching outputs to ensure program was working. Along with various
+ * debugg statements throughout to trouble shoot before the program was fully runnable. Some issues I had were 
+ * with: getting id for display, ordering chip outputs properly, and matching output perfectly. Some optimization
+ * was used in the form of switch cases, but this wasnt taken to the extreme due to the relative lightness of
+ * the program.
+ * 
+ * * * * * * * * * * * * * * * * * * * * * Part 3 - Done * * * * * * * * * * * * * * * * * * * * *
  * 
  */
