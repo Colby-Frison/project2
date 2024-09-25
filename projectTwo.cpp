@@ -51,7 +51,7 @@ public:
     Chip* getInput2() const;
     Chip* getOutput() const;
 
-    //other getter
+    //other getters
     char getType() const;
     string getId() const;
     double getOutputValue() const;
@@ -98,9 +98,12 @@ char Chip::getType() const{
 string Chip::getId() const {
     return id;
 }
+double Chip::getOutputValue() const{
+    return outputValue;
+}
 
 
-/***************************
+/***********************************************************************
  * The compute class is one of the important methods in the program, 
  * it has the responsiblity of actually doing the math of the chips.
  * This is done through a simple switch case that changes what 
@@ -110,7 +113,7 @@ string Chip::getId() const {
  * the comments are for description, others were for debugging I never
  * deleted, I still kept those just to show how debuging worked through
  * my process.
-****************************/
+***********************************************************************/
 void Chip::compute() {
     if (isComputed) return;  // Prevent re-computation
 
@@ -136,9 +139,10 @@ void Chip::compute() {
         case 'D': // Division
             input1->compute();
             input2->compute();
+            // make sure the operation isnt trying to divide by 0 for obvious reasons
             if (input2->getOutputValue() != 0) {
                 outputValue = input1->getOutputValue() / input2->getOutputValue();
-            } else {
+            } else { // if its 0 throw an error
                 cout << "Error: Division by zero!" << endl;
                 outputValue = 0;
             }
@@ -150,7 +154,7 @@ void Chip::compute() {
             //cout << id << " computed: " << outputValue << endl;
             break;
          case 'I': // Input chip
-            outputValue = inputValue;  // Input chip simply holds its input value
+            outputValue = inputValue;  // Input chip just holds its input value
             //cout << id << " input value: " << outputValue << endl;
             break;
         case 'O': // Output chip
@@ -161,14 +165,21 @@ void Chip::compute() {
             //cout << "I am output chip " << id << ", and the value I received is " << outputValue << endl;
             break;
         default:
-            cout << "Unknown chip type!" << endl;
+            cout << "Unknown chip type!" << endl; // throws error for unknown chip type
     }
+
     isComputed = true;  // Mark as computed to avoid re-computation
 }
 
-/***************************
- * 
-****************************/
+
+/********************************************************************************
+ * Display method is not super complicated, it just prints out the message in 
+ * accoradnce to the project description. The input and output chips have their 
+ * own special cases, but the other chips have the same outputs. So tahts what 
+ * the main three statements are for. Then within the statemnets it checks to 
+ * make sure there is acutally a chip to read from, as if there is not, it would 
+ * cause a seggmentation error. It then just calls the getter for the output.
+**********************************************************************************/
 void Chip::display() const {
         // Handle input chips (type 'I')
     if (chipType == 'I') {
@@ -212,11 +223,10 @@ void Chip::display() const {
 }
 
 
-double Chip::getOutputValue() const{
-    return outputValue;
-}
-
-
+/********************************************************************************
+ * This is a helper method that just finds agiven chip based on the id in the
+ * full 'chips' array. This is just to make the main method a little simpler.
+*********************************************************************************/
 Chip* findChipById(Chip* chips[], int numChips, const string& chipId) {
     for (int i = 0; i < numChips; ++i) {
         if (chips[i]->getId() == chipId) {
@@ -226,6 +236,15 @@ Chip* findChipById(Chip* chips[], int numChips, const string& chipId) {
     return nullptr; // Return nullptr if no chip with the given ID is found
 }  
 
+
+/*****************************************************************************************
+ * This is the main method, it just has the responsibilty of reading inputs, then calling 
+ * compute and dispaly methods to get the proper output. Mainly done by changing the way 
+ * the file line is read based on what chip is being used. Then at the end when displaying 
+ * it runs checks to see what chip is being displayed so it can print in the right order.
+ * The first tow don't warrant this solution, but since the output chip on the third one 
+ * this had to be implemeneted.
+ ****************************************************************************************/
 int main() {
     int numChips, numCommands;
 
@@ -332,3 +351,10 @@ int main() {
 
     return 0;
 }
+
+
+/***************************************************************************************
+ * * * * * * * * * * * * * * * * * * Part2 * * * * * * * * * * * * * * * * * * * * * * *
+ * 
+ * 
+ */
