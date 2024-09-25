@@ -353,8 +353,298 @@ int main() {
 }
 
 
-/***************************************************************************************
- * * * * * * * * * * * * * * * * * * Part2 * * * * * * * * * * * * * * * * * * * * * * *
+/*******************************************************************************************
+ * * * * * * * * * * * * * * * * * * Part2 * * * * * * * * * * * * * * * * * * * * * * * * *
+ * 
+ * I started by creating a general outline of the full program, so I inserted the Chip 
+ * class and main method provided in the instructions. I then declared all the helper 
+ * methods in the Chip class besides the display and compute, I then described the 
+ * function of the program as a whole, along with what each portion should do in comments.
+ * I then used chatgpt to help implement the display, computer, and main methods.
+ * 
+ * First I asked for an outline on how to do it in accordance to the instructions, i then 
+ * made all implimentations I could. At this point I dont think I had any errors, but the
+ * code definetly did not function as intended. 
+ * 
+ * I then provided an exmaple input and output, and asked it to tell me how I can change 
+ * my code to get the desired output, after some changes and many errors. The program was 
+ * pretty much done at this point and most questions were related to syntax or small errors.
+ * 
+ * * * * * * * * * * * * * * * Here is the chat logs * * * * * * * * * * * * * * * * * * * *
+ * Link: https://chatgpt.com/share/66f35c8b-e304-800d-9cd9-ecde00889168 
+ * 
+transcription of logs
+
+My question:
+
+**instructions for project**
+I dont wanna paste them here as its a lot of text
+
+create an outline for the program
+
+---------------------------------------------------------------------------
+
+ChatGPT said:
+ChatGPT
+Here's a structured outline for your C++ project implementing the Chip class and the associated functionalities described in the project instructions. This outline breaks down the tasks into logical components to guide your implementation.
+
+Outline for Chip Circuit Simulation Program
+1. Class Definition: Chip
+Private Members:
+
+char chipType: Stores the type of the chip (e.g., 'A', 'S', 'M', 'N', 'D').
+string id: Unique identifier for the chip.
+Chip* input1: Pointer to the first input chip.
+Chip* input2: Pointer to the second input chip (can be NULL).
+Chip* output: Pointer to the output chip (can be NULL, especially for output chips).
+double inputValue: Holds the value for input chips.
+Public Methods:
+
+Constructor:
+Chip(char type, const string& id): Initializes a chip with a specific type and ID.
+Setters:
+void setInput1(Chip* inputChip): Sets the first input chip.
+void setInput2(Chip* inputChip): Sets the second input chip (can be NULL).
+void setOutput(Chip* outputChip): Sets the output chip (can be NULL).
+Computation:
+void compute(): Performs the arithmetic operation based on the chip type.
+Display:
+void display() const: Displays the chip's information.
+Getters:
+string getId() const: Returns the chip ID.
+Additional Methods (if necessary):
+
+Method to set input value for input chips.
+2. Main Program Structure
+Include Necessary Headers:
+
+cpp
+Copy code
+#include <iostream>
+#include <string>
+using namespace std;
+Main Function:
+
+cpp
+Copy code
+int main() {
+    int numChips;
+    cin >> numChips;
+
+    // Step 1: Create an array of Chip pointers
+    Chip** allChips = new Chip*[numChips];
+
+    // Step 2: Read chip IDs and create Chip objects
+    for (int i = 0; i < numChips; i++) {
+        string id;
+        cin >> id;  // Read the chip ID
+        // Determine chip type based on the first character
+        char type = id[0];
+        allChips[i] = new Chip(type, id);  // Create Chip object and store it in the array
+    }
+
+    // Step 3: Read and process commands to connect chips
+    int numCommands;
+    cin >> numCommands;
+
+    for (int i = 0; i < numCommands; i++) {
+        string command;
+        cin >> command;  // Read the command
+
+        if (command[0] == 'A') {
+            // Connection command: A inputChip outputChip
+            string inputId1, inputId2;
+            cin >> inputId1 >> inputId2;
+
+            // Find input chips in allChips array and connect them
+            Chip* inputChip1 = nullptr;
+            Chip* inputChip2 = nullptr;
+
+            // Loop to find chips by ID
+            for (int j = 0; j < numChips; j++) {
+                if (allChips[j]->getId() == inputId1) {
+                    inputChip1 = allChips[j];
+                }
+                if (allChips[j]->getId() == inputId2) {
+                    inputChip2 = allChips[j];
+                }
+            }
+
+            // Set connections
+            allChips[j]->setInput1(inputChip1);
+            if (inputChip2) {
+                allChips[j]->setInput2(inputChip2);
+            }
+
+        } else if (command[0] == 'O') {
+            // Output command: O outputChip
+            string outputId;
+            cin >> outputId;
+
+            // Find the output chip and call compute
+            for (int j = 0; j < numChips; j++) {
+                if (allChips[j]->getId() == outputId) {
+                    allChips[j]->compute();  // Perform computation
+                }
+            }
+        }
+    }
+
+    // Step 4: Show the connections established
+    cout << "***** Showing the connections that were established *****" << endl;
+    for (int i = 0; i < numChips; i++) {
+        allChips[i]->display();  // Display information about each chip
+    }
+
+    // Clean up dynamic memory
+    for (int i = 0; i < numChips; i++) {
+        delete allChips[i];
+    }
+    delete[] allChips;
+
+    return 0;
+}
+3. Input Processing
+Handle redirected input, which provides the configuration and values for the chips.
+Read the initial chip configuration and connections.
+4. Computation Logic
+Implement the compute() method based on chip type:
+Addition (A): Adds two input values.
+Subtraction (S): Subtracts the second input from the first.
+Multiplication (M): Multiplies two input values.
+Negation (N): Negates the input value.
+Division (D): Divides the first input by the second.
+Output (O): Displays the final computed value.
+5. Testing
+Use various input scenarios to ensure that all chips operate correctly and the connections are established as expected.
+Test edge cases such as missing inputs or invalid commands.
+Conclusion
+This outline provides a clear path for implementing the Chip class and managing the connections and computations of the chips in your circuit simulation program. Each section can be expanded into detailed code implementations as you develop your project.
+
+---------------------------------------------------------------------------------------------------
+
+my question:
+can you explain how I should go about writing the dispaly and compute methods
+
+------------------------------------------------------------------------------------------------------
+
+ChatGPT said:
+Certainly! Here’s how to approach writing the display and compute methods for the Chip class in your C++ project.
+
+1. Display Method
+The display method is responsible for showing the current state of a chip, including its type, ID, inputs, and outputs. It should give a clear overview of how the chip fits into the circuit.
+
+Implementation Steps:
+Determine Chip Type: Check the type of the chip (addition, subtraction, etc.) to format the display message accordingly.
+Display Chip Information: Include the ID and the values of the input chips if applicable. For the output chip, display the value received.
+Example Implementation:
+cpp
+Copy code
+void Chip::display() const {
+    // Display chip ID and type
+    cout << "Chip ID: " << id << ", Type: " << chipType;
+
+    // Display input connections
+    if (chipType == 'I') {
+        // Input chip: Display the input value
+        cout << ", Input Value = " << inputValue;
+    } else if (input1) {
+        // For other chips, display input chip IDs
+        cout << ", Input 1 = " << (input1 ? input1->getId() : "None");
+        if (input2) {
+            cout << ", Input 2 = " << input2->getId();
+        } else {
+            cout << ", Input 2 = None";
+        }
+    }
+
+    // For output chip, display the connected output chip ID
+    if (chipType == 'O') {
+        cout << ", Output from = " << (output ? output->getId() : "None");
+    }
+
+    cout << endl; // New line for better readability
+}
+2. Compute Method
+The compute method performs the arithmetic operation specific to the chip type and updates the output accordingly. This method will be critical for the functionality of your circuit.
+
+Implementation Steps:
+Input Handling: Retrieve the values from the input chips.
+Perform the Operation: Based on the chip type, carry out the arithmetic operation.
+Set Output: If the chip produces an output, set the output value accordingly.
+Example Implementation:
+cpp
+Copy code
+void Chip::compute() {
+    switch (chipType) {
+        case 'A': // Addition
+            if (input1 && input2) {
+                outputValue = input1->inputValue + input2->inputValue;
+            }
+            break;
+
+        case 'S': // Subtraction
+            if (input1 && input2) {
+                outputValue = input1->inputValue - input2->inputValue;
+            }
+            break;
+
+        case 'M': // Multiplication
+            if (input1 && input2) {
+                outputValue = input1->inputValue * input2->inputValue;
+            }
+            break;
+
+        case 'D': // Division
+            if (input1 && input2 && input2->inputValue != 0) {
+                outputValue = input1->inputValue / input2->inputValue;
+            } else {
+                cout << "Error: Division by zero" << endl;
+                return;
+            }
+            break;
+
+        case 'N': // Negation
+            if (input1) {
+                outputValue = -input1->inputValue;
+            }
+            break;
+
+        case 'O': // Output chip (this would normally not perform a compute)
+            cout << "I am output chip number " << id 
+                 << ", and the value I received is " << inputValue << endl;
+            return;
+
+        default:
+            cout << "Error: Unknown chip type" << endl;
+            return;
+    }
+
+    // If the chip produces an output, you can set it in an output chip (if applicable)
+    if (output) {
+        output->inputValue = outputValue; // Pass the computed value to the output chip
+    }
+}
+Summary
+Display Method: Clearly shows the chip's ID, type, inputs, and any relevant output information.
+Compute Method: Implements the logic for each chip type, handling arithmetic operations and passing output values to connected chips.
+Additional Considerations
+Error Handling: Make sure to include error checks, such as division by zero or null pointers for input chips.
+Integration: Ensure the compute() method is called in the correct sequence in the main program so that the outputs are calculated in the right order. This might involve cascading the computations through the chain of chips until you reach the output chip.
+This structure will help ensure that your program runs correctly and produces the expected results!
+
+-------------------------------------------------------------------------------------------------------
+
+There are probably a few other but I think I must have been on guest mode because I cannot find the logs
+
+I remember specifially one issue I had was not being able to figure out how to display in the proper order for test3
+
+and the solution it gave was just 3 if statements one for I one for O and one for neither so it was in the right order.
+
+ * * * * * * * * * * * * * * * * * * * * Part 2 - Done* * * * * * * * * * * * * * * * * * * * * * 
+ * 
+ * * * * * * * * * * * * * * * * * * * * * * Part 3 * * * * * * * * * * * * * * * * * * * * * * * 
+ * 
  * 
  * 
  */
